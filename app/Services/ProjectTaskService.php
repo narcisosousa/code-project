@@ -9,14 +9,14 @@
 namespace CodeProject\Services;
 
 
-use CodeProject\Repositories\ProjectNoteRepository;
-use CodeProject\Validators\ProjectNoteValidator;
+use CodeProject\Repositories\ProjectTaskRepository;
+use CodeProject\Validators\ProjectTaskValidator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Illuminate\Database\QueryException;
 
 
-class ProjectNoteService
+class ProjectTaskService
 {
 
     /**
@@ -28,7 +28,7 @@ class ProjectNoteService
      */
     private $validator;
 
-    public function __construct(ProjectNoteRepository $repository, ProjectNoteValidator $validator)
+    public function __construct(ProjectTaskRepository $repository, ProjectTaskValidator $validator)
     {
         $this->repository = $repository;
 
@@ -61,9 +61,9 @@ class ProjectNoteService
         } catch (QueryException $e) {
             return ['error' => true, 'mensagem' => $e->getMessage()];
         } catch (ModelNotFoundException $e) {
-            return ['error' => true, 'mensagem' => 'Nota Não Encontrado'];
+            return ['error' => true, 'mensagem' => 'Tarefa Não Encontrada'];
         } catch (\Exception $e) {
-            return ['error' => true, 'mensagem' => 'Ocorreu algum erro ao atualizar Nota.'.$e->getMessage()];
+            return ['error' => true, 'mensagem' => 'Ocorreu algum erro ao atualizar a Tarefa.'.$e->getMessage()];
         }
     }
 
@@ -71,13 +71,13 @@ class ProjectNoteService
     {
         try {
             $this->repository->find($id)->delete();
-            return ['success' => true, 'mensagem' => 'Nota deletado com sucesso!'];
+            return ['success' => true, 'mensagem' => 'Tarefa deletada com sucesso!'];
         } catch (QueryException $e) {
-            return ['error' => true, 'mensagem' => 'Nota não pode ser apagado pois existe um ou mais clientes vinculados a ele.'];
+            return ['error' => true, 'mensagem' => 'Tarefa não pode ser apagada.'];
         } catch (ModelNotFoundException $e) {
-            return ['error' => true, 'mensagem' => 'Nota não encontrado.'];
+            return ['error' => true, 'mensagem' => 'Tarefa não encontrada.'];
         } catch (\Exception $e) {
-            return ['error' => true, 'mensagem' => 'Ocorreu algum erro ao excluir  Nota.'];
+            return ['error' => true, 'mensagem' => 'Ocorreu algum erro ao excluir a Tarefa.'];
         }
     }
 
@@ -88,9 +88,9 @@ class ProjectNoteService
         } catch (QueryException $e) {
             return ['error' => true, 'mensagem' => $e->getMessage()];
         } catch (ModelNotFoundException $e) {
-            return ['error' => true, 'mensagem' => 'Nota Não Encontrado'];
+            return ['error' => true, 'mensagem' => 'Tarefa Não Encontrada'];
         } catch (\Exception $e) {
-            return ['error' => true, 'mensagem' => 'Ocorreu algum erro ao exibir  Nota.'];
+            return ['error' => true, 'mensagem' => 'Ocorreu algum erro ao exibir a Tarefa.'];
         }
     }
 }

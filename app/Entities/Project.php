@@ -20,6 +20,14 @@ class Project extends Model
         return $this->hasMany(ProjectNote::class);
     }
 
+    public function task(){
+        return $this->hasMany(ProjectTask::class);
+    }
+
+    public function member(){
+        return $this->hasMany(ProjectMembers::class);
+    }
+
     public function owner()
     {
         return $this->belongsTo('CodeProject\Entities\User', 'owner_id');

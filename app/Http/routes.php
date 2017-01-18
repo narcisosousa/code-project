@@ -15,11 +15,11 @@
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/client','ClientController@index');
-Route::post('/client','ClientController@storage');
-Route::get('/client/{id}','ClientController@show');
-Route::delete('/client/{id}','ClientController@destroy');
-Route::post('/client/{id}','ClientController@update');
+Route::get('/client', 'ClientController@index');
+Route::post('/client', 'ClientController@storage');
+Route::get('/client/{id}', 'ClientController@show');
+Route::delete('/client/{id}', 'ClientController@destroy');
+Route::post('/client/{id}', 'ClientController@update');
 
 Route::get('project/{id}/note', 'ProjectNoteController@index');
 Route::post('project/{id}/note', 'ProjectNoteController@store');
@@ -27,9 +27,22 @@ Route::get('project/{id}/note/{noteId}', 'ProjectNoteController@show');
 Route::post('project/{id}/note/{noteId}', 'ProjectNoteController@update');
 Route::delete('project/{id}/note/{noteId}', 'ProjectNoteController@destroy');
 
-Route::get('/project','ProjectController@index');
-Route::post('/project','ProjectController@storage');
-Route::get('/project/{id}','ProjectController@show');
-Route::delete('/project/{id}','ProjectController@destroy');
-Route::post('/project/{id}','ProjectController@update');
+Route::get('project/{id}/task', 'ProjectTaskController@index');
+Route::post('project/{id}/task', 'ProjectTaskController@storage');
+Route::get('project/{id}/task/{taskId}', 'ProjectTaskController@show');
+Route::post('project/{id}/task/{taskId}', 'ProjectTaskController@update');
+Route::delete('project/{id}/task/{taskId}', 'ProjectTaskController@destroy');
+
+Route::get('project/{id}/members', 'ProjectMembersController@index');
+Route::post('project/{id}/members', 'ProjectMembersController@storage');
+Route::delete('project/{id}/members/{memberId}', 'ProjectMembersController@destroy');
+Route::get('project/{id}/members/{userId}', 'ProjectMembersController@member');
+
+Route::get('/project', 'ProjectController@index');
+Route::post('/project', 'ProjectController@storage');
+Route::get('/project/{id}', 'ProjectController@show');
+Route::delete('/project/{id}', 'ProjectController@destroy');
+Route::post('/project/{id}', 'ProjectController@update');
+
+
 
