@@ -9,11 +9,14 @@
 namespace CodeProject\Services;
 
 
+use CodeProject\Entities\ProjectFile;
 use CodeProject\Repositories\ProjectRepository;
 use CodeProject\Validators\ProjectValidator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Illuminate\Database\QueryException;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Contracts\Filesystem\Factory as Storage;
 
 
 class ProjectService
@@ -27,12 +30,21 @@ class ProjectService
      * @var ProjectValidator
      */
     private $validator;
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+    /**
+     * @var Factory
+     */
+    private $factory;
 
-    public function __construct(ProjectRepository $repository, ProjectValidator $validator)
+    public function __construct(ProjectRepository $repository, ProjectValidator $validator, Filesystem $filesystem, Storage $storage)
     {
         $this->repository = $repository;
-
         $this->validator = $validator;
+        $this->filesystem = $filesystem;
+        $this->storage = $storage;
     }
 
     public function create(array $data)
@@ -52,7 +64,7 @@ class ProjectService
     {
         try {
             $this->validator->with($data)->passesOrFail();
-            return $this->repository->update($data, $id);
+            return $this->repository->skipPresenter()->update($data, $id);
         } catch (ValidatorException $e) {
             return [
                 'error' => true,
@@ -70,7 +82,7 @@ class ProjectService
     public function destroy($id)
     {
         try {
-            $this->repository->find($id)->delete();
+            $this->repository->skipPresenter()->find($id)->delete();
             return ['success' => true, 'mensagem' => 'Projeto deletado com sucesso!'];
         } catch (QueryException $e) {
             return ['error' => true, 'mensagem' => 'Projeto não pode ser apagado pois existe um ou mais clientes vinculados a ele.'];
@@ -93,4 +105,17 @@ class ProjectService
             return ['error' => true, 'mensagem' => 'Ocorreu algum erro ao exibir o Projeto.'];
         }
     }
+
+    public function createFile(array $data)
+    {
+        //name
+        //description
+        //extension
+        //file
+        $project = $this->repository->skipPresenter()->find($data['project_id']);
+        $projectFile = $project->files()->create($data);
+        $this->storage->put($projectFile->id.".".$data['name'].".".$data['extension'],$this->filesystem->get($data['file']));
+
+    }
+
 }

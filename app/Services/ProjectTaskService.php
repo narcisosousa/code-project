@@ -52,7 +52,7 @@ class ProjectTaskService
     {
         try {
             $this->validator->with($data)->passesOrFail();
-            return $this->repository->update($data, $id);
+            return $this->repository->skipPresenter()->update($data, $id);
         } catch (ValidatorException $e) {
             return [
                 'error' => true,
@@ -70,7 +70,7 @@ class ProjectTaskService
     public function destroy($id)
     {
         try {
-            $this->repository->find($id)->delete();
+            $this->repository->skipPresenter()->find($id)->delete();
             return ['success' => true, 'mensagem' => 'Tarefa deletada com sucesso!'];
         } catch (QueryException $e) {
             return ['error' => true, 'mensagem' => 'Tarefa não pode ser apagada.'];

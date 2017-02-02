@@ -12,6 +12,7 @@ namespace CodeProject\Http\Controllers;
 use CodeProject\Repositories\ProjectNoteRepository;
 use CodeProject\Services\ProjectNoteService;
 use Illuminate\Http\Request;
+use LucaDegasperi\OAuth2Server\Facades\Authorizer;
 
 class ProjectNoteController extends Controller
 {
@@ -24,32 +25,57 @@ class ProjectNoteController extends Controller
      * @var ProjectNoteService
      */
     private $service;
+    /**
+     * @var ProjectController
+     */
+    private $projectController;
 
-    public function __construct(ProjectNoteRepository $repository, ProjectNoteService $service)
+    public function __construct(ProjectNoteRepository $repository, ProjectNoteService $service, ProjectController $projectController)
     {
         $this->repository = $repository;
-
         $this->service = $service;
+        $this->projectController = $projectController;
     }
 
-    public function  index($id){
+    public function index($id)
+    {
+        if ($this->projectController->checkProjectPermissions($id) == false) {
+            return ['error' => 'Access forbidden'];
+        }
         return $this->repository->findWhere(['project_id' => $id]);
     }
 
-    public function storage(Request $request){
+    public function store($id, Request $request)
+    {
+        if ($this->projectController->checkProjectPermissions($id) == false) {
+            return ['error' => 'Access forbidden'];
+        }
         return $this->service->create($request->all());
     }
 
-    public function show($id, $noteId){
+    public function show($id, $noteId)
+    {
+        if ($this->projectController->checkProjectPermissions($id) == false) {
+            return ['error' => 'Access forbidden'];
+        }
         return $this->repository->findWhere(['project_id' => $id, 'id' => $noteId]);
     }
 
-    public function destroy($id, $noteId){
+    public function destroy($id, $noteId)
+    {
+        if ($this->projectController->checkProjectOwner($id) == false) {
+            return ['error' => 'Access forbidden'];
+        }
         return $this->service->destroy($noteId);
     }
 
-    public function update(Request $request, $id, $noteId){
-        return $this->service->update($request->all(),$noteId);
+    public function update(Request $request, $id, $noteId)
+    {
+        if ($this->projectController->checkProjectPermissions($id) == false) {
+            return ['error' => 'Access forbidden'];
+        }
+        return $this->service->update($request->all(), $noteId);
     }
+
 
 }

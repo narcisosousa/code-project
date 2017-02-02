@@ -25,7 +25,7 @@ class Project extends Model
     }
 
     public function member(){
-        return $this->hasMany(ProjectMembers::class);
+        return $this->belongsToMany(User::class,'project_members');
     }
 
     public function owner()
@@ -36,6 +36,10 @@ class Project extends Model
     public function client()
     {
         return $this->belongsTo('CodeProject\Entities\Client', 'client_id');
+    }
+
+    public function files(){
+        return $this->hasMany(ProjectFile::class);
     }
 
 

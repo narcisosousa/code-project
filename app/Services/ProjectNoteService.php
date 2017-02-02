@@ -51,7 +51,7 @@ class ProjectNoteService
     public function update(array $data, $id)
     {
         try {
-            $this->validator->with($data)->passesOrFail();
+            $this->validator->skipPresenter()->with($data)->passesOrFail();
             return $this->repository->update($data, $id);
         } catch (ValidatorException $e) {
             return [
@@ -70,8 +70,8 @@ class ProjectNoteService
     public function destroy($id)
     {
         try {
-            $this->repository->find($id)->delete();
-            return ['success' => true, 'mensagem' => 'Nota deletado com sucesso!'];
+            $this->repository->skipPresenter()->find($id)->delete();
+            return ['success' => true, 'mensagem' => 'Nota deletada com sucesso!'];
         } catch (QueryException $e) {
             return ['error' => true, 'mensagem' => 'Nota não pode ser apagado pois existe um ou mais clientes vinculados a ele.'];
         } catch (ModelNotFoundException $e) {

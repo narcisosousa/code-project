@@ -84,7 +84,7 @@ class ProjectMembersService
     public function index($projectId)
     {
         $member = $this->repository->findWhere(['project_id' => $projectId]);
-        if (!$member->isEmpty()) {
+        if (!is_null($member)) {
             return [$member];
         }
         return ['mensagem' => 'Não há membros relacionados ao projeto'];
@@ -112,8 +112,8 @@ class ProjectMembersService
     public function removeMember($id, $memberId)
     {
         try {
-            $member = $this->repository->findWhere(['project_id' => $id, 'user_id' => $memberId]);
-            if (!$member->isEmpty()) {
+            $member = $this->repository->skipPresenter()->findWhere(['project_id' => $id, 'user_id' => $memberId]);
+            if (!is_null($member)) {
                 $this->repository->delete($member[0]->id);
                 return ['success' => true, 'mensagem' => 'Membro deletado com sucesso!'];
             }
@@ -129,7 +129,7 @@ class ProjectMembersService
     public function isMember($id, $userId)
     {
         try {
-            $member = $this->repository->findWhere(['project_id' => $id, 'user_id' => $userId]);
+            $member = $this->repository->skipPresenter()->findWhere(['project_id' => $id, 'user_id' => $userId]);
             if (!$member->isEmpty()) {
                 return ['success' => true, 'mensagem' => 'Membro pertence ao projeto!'];
             }

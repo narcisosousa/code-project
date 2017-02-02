@@ -76,3 +76,14 @@ $factory->define(CodeProject\Entities\ProjectMembers::class, function (Faker\Gen
     ];
 });
 
+$factory->define(CodeProject\Entities\OAuthClient::class, function (Faker\Generator $faker) {
+
+    return [
+        'id' => $faker->word,
+        'secret' => $faker->word,
+        'name' => $faker->word,
+    ];
+});
+
+
+
