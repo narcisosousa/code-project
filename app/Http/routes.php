@@ -13,7 +13,7 @@
 
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('app');
 });
 
 Route::post('oauth/acess_token', function () {
