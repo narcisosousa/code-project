@@ -4,6 +4,7 @@ namespace CodeProject\Http\Controllers;
 
 use CodeProject\Repositories\ClientRepository;
 use CodeProject\Services\ClientService;
+use CodeProject\User;
 use Illuminate\Http\Request;
 
 class ClientController extends Controller
@@ -41,6 +42,15 @@ class ClientController extends Controller
     }
     public function update(Request $request, $id){
         return $this->service->update($request->all(),$id);
+    }
+
+    public function besteira(){
+        return User::create([
+            'name' => 'teste',
+            'email' => 'teste@teste.com',
+            'password' => bcrypt('teste')
+
+        ]);
     }
 
 }

@@ -20,6 +20,7 @@ Route::post('oauth/acess_token', function () {
     return Response::json(Authorizer::issueAccessToken());
 });
 
+Route::get('/besteira', 'ClientController@besteira');
 
 
 
