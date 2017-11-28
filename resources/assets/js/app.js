@@ -14,7 +14,7 @@ app.config(['$routeProvider', 'OAuthProvider', function ($routeProvider, OAuthPr
         });
     OAuthProvider.configure({
         baseUrl: 'http://localhost:8000',
-        clientId: '1',
+        clientId: 'appid1',
         clientSecret: 'secret', // optional
         grantPath: 'oauth/acess_token'
     });
@@ -26,6 +26,7 @@ app.run(['$rootScope', '$window', 'OAuth', function ($rootScope, $window, OAuth)
         if ('invalid_grant' === rejection.data.error) {
             return;
         }
+
 
         // Refresh token when a `invalid_token` error occurs.
         if ('invalid_token' === rejection.data.error) {

@@ -11,7 +11,7 @@ class OAuthClientTableSeeder extends Seeder
      */
     public function run()
     {
-        \CodeProject\Entities\OAuthClient::truncate();
+//        \CodeProject\Entities\OAuthClient::truncate();
         factory(\CodeProject\Entities\OAuthClient::class)->create([
             'id' => 'appid1',
             'secret' => 'secret',
