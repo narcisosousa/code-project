@@ -84,7 +84,7 @@ class ProjectNoteService
     public function show($id)
     {
         try {
-            return $this->repository->skipPresenter()->find($id)->first();
+            return $this->repository->find($id);
         } catch (QueryException $e) {
             return ['error' => true, 'mensagem' => $e->getMessage()];
         } catch (ModelNotFoundException $e) {

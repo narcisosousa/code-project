@@ -42,7 +42,7 @@ class ProjectNoteController extends Controller
         if ($this->projectController->checkProjectPermissions($id) == false) {
 //            return ['error' => 'Access forbidden'];
         }
-        return $this->repository->skipPresenter()->findWhere(['project_id' => $id]);
+        return $this->repository->findWhere(['project_id' => $id]);
     }
 
     public function store($id, Request $request)
@@ -58,15 +58,22 @@ class ProjectNoteController extends Controller
         if ($this->projectController->checkProjectPermissions($id) == false) {
 //            return ['error' => 'Access forbidden'];
         }
-        return $this->repository->skipPresenter()->findWhere(['project_id' => $id, 'id' => $noteId])->first();
+        $result = $this->repository->findWhere(['project_id' => $id, 'id' => $noteId]);
+
+        if (isset($result) && count($result)) {
+            return $result = [
+                'data' => $result['data'][0]
+            ];
+        }
+        return $result;
     }
 
-    public function destroy($id, $noteId)
+    public function destroy($id, $IdNote)
     {
         if ($this->projectController->checkProjectOwner($id) == false) {
 //            return ['error' => 'Access forbidden'];
         }
-        return $this->service->destroy($noteId);
+        return $this->service->destroy($IdNote);
     }
 
     public function update(Request $request, $id, $noteId)

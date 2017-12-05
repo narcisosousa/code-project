@@ -15,8 +15,20 @@ app.provider('appConfig', function () {
         }
     }
 });
-app.config(['$routeProvider', 'OAuthProvider', 'OAuthTokenProvider', 'appConfigProvider',
-    function ($routeProvider, OAuthProvider, OAuthTokenProvider, appConfigProvider) {
+app.config(['$routeProvider', '$httpProvider', 'OAuthProvider', 'OAuthTokenProvider', 'appConfigProvider',
+    function ($routeProvider, $httpProvider, OAuthProvider, OAuthTokenProvider, appConfigProvider) {
+        $httpProvider.defaults.transformResponse = function (data, headers) {
+            var headersGetter = headers();
+            if (headersGetter['content-type'] == 'application/json' ||
+                headersGetter['content-type'] == 'text/json') {
+                var dataJson = JSON.parse(data);
+                if (dataJson.hasOwnProperty('data')) {
+                    dataJson = dataJson.data;
+                }
+                return dataJson;
+            }
+            return data;
+        };
         $routeProvider
             .when('/login', {
                 templateUrl: 'build/views/login.html',
@@ -30,13 +42,13 @@ app.config(['$routeProvider', 'OAuthProvider', 'OAuthTokenProvider', 'appConfigP
                 templateUrl: 'build/views/client/list.html',
                 controller: 'ClientListController'
             })
-            .when('/clients/:id', {
-                templateUrl: 'build/views/client/listId.html',
-                controller: 'ClientListIdController'
-            })
             .when('/clients/new', {
                 templateUrl: 'build/views/client/new.html',
                 controller: 'ClientNewController'
+            })
+            .when('/clients/:id', {
+                templateUrl: 'build/views/client/show.html',
+                controller: 'ClientShowController'
             })
             .when('/clients/:id/edit', {
                 templateUrl: 'build/views/client/edit.html',
@@ -55,8 +67,8 @@ app.config(['$routeProvider', 'OAuthProvider', 'OAuthTokenProvider', 'appConfigP
                 controller: 'ProjectNoteNewController'
             })
             .when('/project/:id/notes/:idNote', {
-                templateUrl: 'build/views/projectNote/listId.html',
-                controller: 'ProjectNoteListIdController'
+                templateUrl: 'build/views/projectNote/show.html',
+                controller: 'ProjectNoteShowController'
             })
             .when('/project/:id/notes/:idNote/edit', {
                 templateUrl: 'build/views/projectNote/edit.html',
