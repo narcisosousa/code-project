@@ -51,7 +51,7 @@ class ProjectNoteService
     public function update(array $data, $id)
     {
         try {
-            $this->validator->skipPresenter()->with($data)->passesOrFail();
+            $this->validator->with($data)->passesOrFail();
             return $this->repository->update($data, $id);
         } catch (ValidatorException $e) {
             return [
@@ -84,7 +84,7 @@ class ProjectNoteService
     public function show($id)
     {
         try {
-            return $this->repository->find($id);
+            return $this->repository->skipPresenter()->find($id)->first();
         } catch (QueryException $e) {
             return ['error' => true, 'mensagem' => $e->getMessage()];
         } catch (ModelNotFoundException $e) {

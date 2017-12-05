@@ -26,10 +26,10 @@ class ClientController extends Controller
     }
 
     public function index(){
-        return $this->repository->all();
+        return $this->repository->skipPresenter()->all();
     }
 
-    public function storage(Request $request){
+    public function store(Request $request){
         return $this->service->create($request->all());
     }
 

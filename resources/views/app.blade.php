@@ -82,8 +82,27 @@
     <script src="{{asset('build/js/vendor/angular-oauth2.min.js')}}"></script>
 
     <script src="{{asset('build/js/app.js')}}"></script>
+
+    <!-- Controllers !-->
     <script src="{{asset('build/js/controllers/login.js')}}"></script>
     <script src="{{asset('build/js/controllers/home.js')}}"></script>
+
+    <script src="{{asset('build/js/controllers/client/clientList.js')}}"></script>
+    <script src="{{asset('build/js/controllers/client/clientListId.js')}}"></script>
+    <script src="{{asset('build/js/controllers/client/clientNew.js')}}"></script>
+    <script src="{{asset('build/js/controllers/client/clientEdit.js')}}"></script>
+    <script src="{{asset('build/js/controllers/client/clientRemove.js')}}"></script>
+
+    <script src="{{asset('build/js/controllers/projectNote/projectNoteList.js')}}"></script>
+    <script src="{{asset('build/js/controllers/projectNote/projectNoteListId.js')}}"></script>
+    <script src="{{asset('build/js/controllers/projectNote/projectNoteNew.js')}}"></script>
+    <script src="{{asset('build/js/controllers/projectNote/projectNoteEdit.js')}}"></script>
+    <script src="{{asset('build/js/controllers/projectNote/projectNoteRemove.js')}}"></script>
+
+
+        <!-- Services !-->
+    <script src="{{asset('build/js/services/client.js')}}"></script>
+    <script src="{{asset('build/js/services/projectNote.js')}}"></script>
 @else
     <script src="{{elixir('js/all.js')}}"></script>
 @endif

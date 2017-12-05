@@ -1,24 +1,86 @@
-var app = angular.module('app', ['ngRoute', 'angular-oauth2', 'app.controllers']);
+var app = angular.module('app', ['ngRoute', 'angular-oauth2', 'app.controllers', 'app.services']);
 
-angular.module('app.controllers', ['ngMessages','angular-oauth2']);
+angular.module('app.controllers', ['ngMessages', 'angular-oauth2']);
+angular.module('app.services', ['ngResource']);
 
-app.config(['$routeProvider', 'OAuthProvider', function ($routeProvider, OAuthProvider) {
-    $routeProvider
-        .when('/login', {
-            templateUrl: 'build/views/login.html',
-            controller: 'LoginController'
-        })
-        .when('/home', {
-            templateUrl: 'build/views/home.html',
-            controller: 'HomeController'
+app.provider('appConfig', function () {
+    var config = {
+        baseUrl: 'http://localhost:8000'
+    };
+
+    return {
+        config: config,
+        $get: function () {
+            return config;
+        }
+    }
+});
+app.config(['$routeProvider', 'OAuthProvider', 'OAuthTokenProvider', 'appConfigProvider',
+    function ($routeProvider, OAuthProvider, OAuthTokenProvider, appConfigProvider) {
+        $routeProvider
+            .when('/login', {
+                templateUrl: 'build/views/login.html',
+                controller: 'LoginController'
+            })
+            .when('/home', {
+                templateUrl: 'build/views/home.html',
+                controller: 'HomeController'
+            })
+            .when('/clients', {
+                templateUrl: 'build/views/client/list.html',
+                controller: 'ClientListController'
+            })
+            .when('/clients/:id', {
+                templateUrl: 'build/views/client/listId.html',
+                controller: 'ClientListIdController'
+            })
+            .when('/clients/new', {
+                templateUrl: 'build/views/client/new.html',
+                controller: 'ClientNewController'
+            })
+            .when('/clients/:id/edit', {
+                templateUrl: 'build/views/client/edit.html',
+                controller: 'ClientEditController'
+            })
+            .when('/clients/:id/remove', {
+                templateUrl: 'build/views/client/remove.html',
+                controller: 'ClientRemoveController'
+            })
+            .when('/project/:id/notes', {
+                templateUrl: 'build/views/projectNote/list.html',
+                controller: 'ProjectNoteListController'
+            })
+            .when('/project/:id/notes/new', {
+                templateUrl: 'build/views/projectNote/new.html',
+                controller: 'ProjectNoteNewController'
+            })
+            .when('/project/:id/notes/:idNote', {
+                templateUrl: 'build/views/projectNote/listId.html',
+                controller: 'ProjectNoteListIdController'
+            })
+            .when('/project/:id/notes/:idNote/edit', {
+                templateUrl: 'build/views/projectNote/edit.html',
+                controller: 'ProjectNoteEditController'
+            })
+            .when('/project/:id/notes/:idNote/remove', {
+                templateUrl: 'build/views/projectNote/remove.html',
+                controller: 'ProjectNoteRemoveController'
+            });
+
+        OAuthProvider.configure({
+            baseUrl: appConfigProvider.config.baseUrl,
+            clientId: 'appid1',
+            clientSecret: 'secret', // optional
+            grantPath: 'oauth/acess_token'
         });
-    OAuthProvider.configure({
-        baseUrl: 'http://localhost:8000',
-        clientId: 'appid1',
-        clientSecret: 'secret', // optional
-        grantPath: 'oauth/acess_token'
-    });
-}]);
+
+        OAuthTokenProvider.configure({
+            name: 'token',
+            options: {
+                secure: false
+            }
+        });
+    }]);
 
 app.run(['$rootScope', '$window', 'OAuth', function ($rootScope, $window, OAuth) {
     $rootScope.$on('oauth:error', function (event, rejection) {
@@ -27,7 +89,7 @@ app.run(['$rootScope', '$window', 'OAuth', function ($rootScope, $window, OAuth)
             return;
         }
 
-        
+
         // Refresh token when a `invalid_token` error occurs.
         if ('invalid_token' === rejection.data.error) {
             return OAuth.getRefreshToken();

@@ -50,7 +50,7 @@ class ClientService
     {
         try {
             $this->validator->with($data)->passesOrFail();
-            return $this->repository->update($data, $id);
+            return $this->repository->skipPresenter()->update($data, $id);
         } catch (ValidatorException $e) {
             return [
                 'error' => true,
@@ -63,7 +63,7 @@ class ClientService
     public function destroy($id)
     {
         try {
-            $this->repository->find($id)->delete();
+            $this->repository->skipPresenter()->find($id)->delete();
             return ['success' => true, 'mensagem' => 'Cliente deletado com sucesso!'];
         } catch (QueryException $e) {
             return ['error' => true, 'mensagem' => 'Cliente não pode ser apagado.'];
@@ -79,7 +79,7 @@ class ClientService
     public function show($id)
     {
         try {
-            return $this->repository->find($id);
+            return $this->repository->skipPresenter()->find($id);
         } catch (QueryException $e) {
             return ['error' => true, 'mensagem' => $e->getMessage()];
         } catch (ModelNotFoundException $e) {
